@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Global Map Sample</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <link href="~/Scripts/leaflet.css" rel="stylesheet" />
+    <script src="~/Scripts/leaflet.js"></script>
+    <script src="~/Scripts/L.Terminator.js"></script>
+    <script src="~/Scripts/L.Icon.Pulse.js"></script>
+    <link href="~/Scripts/L.Icon.Pulse.css" rel="stylesheet" />
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/moment-timezone.js"></script>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html, body, #map {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+
+		var map =  L.map('map').setView([20, 34], 3);
+
+		L.terminator().addTo(map);
+
+		L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		    maxZoom: 18,
+		    id: '{id}',
+		    accessToken: '{accessToken}'
+		}).addTo(map);
+
+
+		var pulsingIcon = L.icon.pulse({ iconSize: [20, 20], color: 'red' });
+	
+
+		$.getJSON("/api/Weather", function (data) {
+		 
+	
+		    for (var i = 0; i < data.length; i++) {
+		        L.marker([data[i].Latitude, data[i].Longitude], { icon: pulsingIcon }).addTo(map).bindPopup('<b>' + data[i].City + '</b><br>' + data[i].Temperature + "°C" + '<br>' + data[i].Humidity + "%");
+
+		    }
+
+		});
+
+    </script>
+</body>
+</html>
